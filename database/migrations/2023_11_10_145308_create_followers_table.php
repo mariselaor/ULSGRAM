@@ -22,7 +22,7 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.e
+     * Reverse the migrations.
      *
      * @return void
      */

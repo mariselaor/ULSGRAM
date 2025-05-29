@@ -15,25 +15,24 @@ class PublicacionController extends Controller
     }
 
     // Guardar una publicación con imagen, título y descripción
-    public function store(Request $request)
-    {
-        $request->validate([
-            'imagen' => 'required|image|max:2048',
-            'titulo' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'imagen' => 'required|image|max:2048',
+        'titulo' => 'required|string|max:255',
+        'descripcion' => 'required|string',
+    ]);
 
-        // Guardar la imagen y obtener la ruta pública
-        $path = $request->file('imagen')->store('imagenes', 'public');
-        $url = asset('storage/' . $path);  // Para generar URL completa
+    $path = $request->file('imagen')->store('imagenes', 'public');
+    $url = asset('storage/' . $path);
 
-        // Crear la publicación en la base de datos
-        $publicacion = Publicacion::create([
-            'url' => $url,
-            'titulo' => $request->titulo,
-            'descripcion' => $request->descripcion,
-        ]);
+    $publicacion = Publicacion::create([
+        'url' => $url,
+        'titulo' => $request->titulo,
+        'descripcion' => $request->descripcion,
+    ]);
 
-        return response()->json($publicacion, 201);
-    }
+    return response()->json($publicacion, 201);
+}
+
 }

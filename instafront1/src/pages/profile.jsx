@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { httpClient } from "../api/HttpClient";
-import '../style/perfil.css';
+import '../style/perfil.css'
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -11,7 +11,7 @@ export default function Profile() {
       .then(res => setUser(res.data.user))
       .catch(err => console.error("Error al obtener perfil", err));
 
-    httpClient.get("/publicaciones")
+    httpClient.get("/publicacion")
       .then(res => setPosts(res.data))
       .catch(err => console.error("Error al obtener publicaciones", err));
   }, []);
@@ -62,14 +62,6 @@ export default function Profile() {
               Siguiendo
             </div>
           </div>
-
-          {/* Botón de editar perfil */}
-          <button
-            className="edit-profile-button"
-            onClick={() => alert('Funcionalidad para editar perfil pendiente')}
-          >
-            Editar perfil
-          </button>
         </div>
       </div>
 

@@ -1,51 +1,100 @@
 import { useState } from "react";
-import { httpClient } from "../api/HttpClient";
+import axios from "axios";
 
 export default function CrearPublicacion() {
-  const [image, setImage] = useState(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [form, setForm] = useState({
+    titulo: "",
+    descripcion: "",
+  });
+  const [imagen, setImagen] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setImagen(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    if (!imagen) {
+      setError("La imagen es obligatoria.");
+      return;
+    }
+
     const formData = new FormData();
-    formData.append("image", image);
-    formData.append("title", title);
-    formData.append("description", description);
+    formData.append("imagen", imagen);
+    formData.append("titulo", form.titulo);
+    formData.append("descripcion", form.descripcion);
 
     try {
-      const token = localStorage.getItem("token"); // O donde almacenes tu token
-      const response = await httpClient.post("/publicaciones", formData, {
+      // eslint-disable-next-line no-unused-vars
+      const response = await axios.post("http://localhost:8000/api/publicaciones", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${token}`, // Incluye el token en la solicitud
         },
       });
-      console.log("Publicación creada:", response.data);
-    } catch (error) {
-      console.error("Error al crear publicación:", error.response || error);
+
+      setSuccess("Publicación creada con éxito");
+      setForm({ titulo: "", descripcion: "" });
+      setImagen(null);
+    } catch (err) {
+      if (err.response?.status === 422) {
+        const errors = err.response.data.errors;
+        if (errors) {
+          // Convierte los arrays de mensajes a un solo string
+          const messages = Object.values(errors).map(msg =>
+            Array.isArray(msg) ? msg.join(" ") : msg
+          );
+          setError(messages.join(" "));
+        } else {
+          setError("Error de validación en el formulario.");
+        }
+      } else {
+        setError(err.response?.data?.message || "Error al crear la publicación.");
+      }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setImage(e.target.files[0])}
-      />
+    <form onSubmit={handleSubmit} style={{ maxWidth: 400, margin: "auto" }}>
+      <h2>Crear Publicación</h2>
       <input
         type="text"
+        name="titulo"
         placeholder="Título"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={form.titulo}
+        onChange={handleChange}
+        required
       />
+      <br />
       <textarea
+        name="descripcion"
         placeholder="Descripción"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        value={form.descripcion}
+        onChange={handleChange}
+        required
+        rows={4}
       />
-      <button type="submit">Subir</button>
+      <br />
+      <input
+        type="file"
+        name="imagen"
+        onChange={handleFileChange}
+        accept="image/*"
+        required
+      />
+      <br />
+      <button type="submit">Crear Publicación</button>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p style={{ color: "green" }}>{success}</p>}
     </form>
   );
 }

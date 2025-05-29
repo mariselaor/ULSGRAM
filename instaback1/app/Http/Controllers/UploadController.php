@@ -10,7 +10,7 @@ class UploadController extends Controller
     public function store(Request $request)
     {
         // Verificar si el usuario tiene permisos
-        if ($request->user()->role !== 'admin') {
+        if ($request->user()->role !== 'user') {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 

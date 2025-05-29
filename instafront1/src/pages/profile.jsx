@@ -1,74 +1,93 @@
-import { useState } from 'react';
+import { useEffect, useState } from "react";
+import { httpClient } from "../api/HttpClient";
+import '../style/perfil.css'
 
-export default function PerfilApp() {
-  const [perfilSeleccionado, setPerfilSeleccionado] = useState(null);
-  const [busqueda, setBusqueda] = useState('');
-  
-  const usuarios = [
-    { id: 1, name: "Mi Perfil", email: "miemail@ejemplo.com" },
-    { id: 2, name: "Juan Perez", email: "juan@ejemplo.com" },
-    { id: 3, name: "Ana Gomez", email: "ana@ejemplo.com" },
-  ];
+export default function Profile() {
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
 
-  const resultadosFiltrados = usuarios.filter(u =>
-    u.name.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  useEffect(() => {
+    httpClient.get("/user-profile")
+      .then(res => setUser(res.data.user))
+      .catch(err => console.error("Error al obtener perfil", err));
+
+    httpClient.get("/publicaciones")
+      .then(res => setPosts(res.data))
+      .catch(err => console.error("Error al obtener publicaciones", err));
+  }, []);
+
+  if (!user)
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <p className="text-gray-500 text-lg">Cargando perfil...</p>
+      </div>
+    );
 
   return (
-    <div style={{ maxWidth: 600, margin: 'auto', fontFamily: 'Arial, sans-serif' }}>
-      <h2>Buscador de usuarios</h2>
-      <input
-        type="text"
-        placeholder="Busca un usuario"
-        value={busqueda}
-        onChange={e => setBusqueda(e.target.value)}
-        style={{ width: '100%', padding: 8, marginBottom: 10 }}
-      />
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-12 px-4">
+      {/* Perfil principal */}
+      <div className="profile-container">
+        {/* Foto perfil */}
+        <div className="profile-avatar">
+          {user.avatar ? (
+            <img
+              src={user.avatar}
+              alt={`${user.name} avatar`}
+            />
+          ) : (
+            <span>{user.name[0].toUpperCase()}</span>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            title="Cambiar foto"
+            onChange={() => alert("Funcionalidad para subir foto pendiente")}
+          />
+        </div>
 
-      {!perfilSeleccionado ? (
-        <div>
-          <h3>Resultados</h3>
-          {resultadosFiltrados.length === 0 && <p>No hay resultados.</p>}
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {resultadosFiltrados.map(u => (
-              <li key={u.id} style={{ marginBottom: 8 }}>
-                <button
-                  onClick={() => setPerfilSeleccionado(u)}
-                  style={{
-                    cursor: 'pointer',
-                    background: '#eee',
-                    border: 'none',
-                    padding: '8px 12px',
-                    width: '100%',
-                    textAlign: 'left',
-                    borderRadius: 4,
-                  }}
-                >
-                  {u.name}
-                </button>
-              </li>
+        {/* Datos principales */}
+        <div className="profile-info">
+          <div className="profile-name">
+            {user.name}
+            <span className="profile-username">@{user.username || user.name.toLowerCase().replace(/\s+/g, '')}</span>
+          </div>
+
+          <div className="profile-followers">
+            <div>
+              <span className="number">{user.followers || 0}</span>
+              Seguidores
+            </div>
+            <div>
+              <span className="number">{user.following || 0}</span>
+              Siguiendo
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Publicaciones */}
+      <section className="posts-section">
+        <h2>Mis publicaciones</h2>
+
+        {posts.length === 0 ? (
+          <p className="text-center text-gray-500">No hay publicaciones todavía.</p>
+        ) : (
+          <div className="posts-grid">
+            {posts.map(post => (
+              <article key={post.id} className="post-card">
+                <img
+                  src={post.url}
+                  alt={post.titulo}
+                />
+                <div className="post-content">
+                  <h3 className="post-title">{post.titulo}</h3>
+                  <p className="post-description">{post.descripcion}</p>
+                </div>
+              </article>
             ))}
-          </ul>
-        </div>
-      ) : (
-        <div>
-          <button
-            onClick={() => setPerfilSeleccionado(null)}
-            style={{
-              marginBottom: 20,
-              background: '#ddd',
-              border: 'none',
-              padding: '6px 12px',
-              borderRadius: 4,
-              cursor: 'pointer'
-            }}
-          >
-            ← Volver a búsqueda
-          </button>
-          <h2>Perfil de {perfilSeleccionado.name}</h2>
-          <p><b>Email:</b> {perfilSeleccionado.email}</p>
-        </div>
-      )}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

@@ -1,183 +1,145 @@
+/* Contenedor del perfil */
 .profile-container {
-  max-width: 1024px;
-  margin: 0 auto;
-  padding: 2rem;
-  background-color: var(--white, #fff);
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.1), 0 4px 6px -4px rgba(99, 102, 241, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
-@media(min-width: 768px) {
-  .profile-container {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-}
-
-/* Foto perfil */
+/* Avatar */
 .profile-avatar {
-  width: 8rem;
-  height: 8rem;
-  border-radius: 9999px;
-  border: 2px solid #6366f1; /* Indigo 500 */
-  background-color: #e0e7ff; /* Indigo 100 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #4f46e5; /* Indigo 600 */
-  font-size: 3rem;
-  font-weight: 700;
-  cursor: pointer;
   position: relative;
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-}
-
-.profile-avatar:hover {
-  box-shadow: 0 0 10px 3px #818cf8; /* Indigo glow */
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
 }
 
 .profile-avatar img {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #4caf50;
 }
 
-/* Input file oculto */
-.profile-avatar input[type="file"] {
+.profile-avatar span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #4caf50;
+  color: white;
+  font-size: 2.5rem;
+}
+
+.profile-avatar input {
   position: absolute;
-  inset: 0;
-  opacity: 0;
+  bottom: 0;
+  right: 0;
+  width: 35px;
+  height: 35px;
+  background: white;
+  border-radius: 50%;
+  border: 2px solid #4caf50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 }
 
-/* Datos principales */
-.profile-info {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* Información */
+.profile-info .profile-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.profile-name {
-  font-size: 2rem; /* text-4xl */
-  font-weight: 300; /* regular */
-  color: #111827; /* gray-900 */
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
+.profile-info .profile-username {
+  font-size: 1rem;
+  color: #666;
 }
 
-.profile-username {
-  font-size: 1.25rem;
-  color: #6b7280; /* gray-500 */
-}
-
-/* Seguidores y siguiendo */
 .profile-followers {
-  margin-top: 1rem;
   display: flex;
-  gap: 3rem;
-  font-weight: 500;
-  color: #4b5563; /* gray-600 */
+  justify-content: space-around;
+  margin-top: 20px;
 }
 
 .profile-followers div {
   text-align: center;
 }
 
-.profile-followers span.number {
+.profile-followers .number {
   display: block;
-  font-size: 1.125rem; /* text-lg */
-  font-weight: 600;
-  color: #111827; /* gray-900 */
+  font-size: 1.4rem;
+  font-weight: bold;
 }
 
-/* Roles y email */
-.profile-roles {
-  margin-top: 1.5rem;
-  color: #4f46e5; /* Indigo 600 */
+/* Botón Editar perfil */
+.edit-profile-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
   font-weight: 600;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: all 0.3s;
+  cursor: pointer;
 }
 
-.profile-email {
-  margin-top: 0.25rem;
-  color: #4b5563; /* gray-600 */
+.edit-profile-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.edit-profile-button:active {
+  transform: translateY(1px);
 }
 
 /* Publicaciones */
-.posts-section {
-  max-width: 1440px;
-  width: 100%;
-  margin-top: 3.5rem;
-}
-
 .posts-section h2 {
-  font-size: 1.875rem; /* text-3xl */
-  font-weight: 600;
-  color: #1f2937; /* gray-800 */
-  margin-bottom: 2rem;
-  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #333;
 }
 
-/* Grid publicaciones */
 .posts-grid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
 }
 
-@media(min-width: 640px) {
-  .posts-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media(min-width: 768px) {
-  .posts-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Card publicación */
 .post-card {
-  background-color: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: box-shadow 0.3s ease;
-}
-
-.post-card:hover {
-  box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .post-card img {
   width: 100%;
-  height: 12rem;
+  height: 200px;
   object-fit: cover;
 }
 
 .post-content {
-  padding: 1.25rem;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+  padding: 15px;
 }
 
 .post-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #111827;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .post-description {
-  color: #4b5563;
-  flex-grow: 1;
+  font-size: 0.9rem;
+  color: #555;
 }

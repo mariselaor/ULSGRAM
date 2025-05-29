@@ -108,6 +108,9 @@ export default function Registro() {
           <button type="submit" className="btn btn-primary w-100">
             Registrarse
           </button>
+          <div className="login-footer">
+          <p>¿Ya tienes una cuenta? <a href="/login">Login</a></p>
+        </div>
         </form>
       </div>
     </div>

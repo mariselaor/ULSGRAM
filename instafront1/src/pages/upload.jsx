@@ -31,6 +31,8 @@ export default function CrearPublicacion() {
       const response = await axios.post('http://localhost:8000/api/publicaciones', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+           Authorization: `Bearer ${localStorage.getItem('token')}`, // Si la ruta está protegida
+      
         },
       });
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PublicacionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\UserController;
 
 // Rutas públicas
 Route::post('/register', [AuthController::class, 'register']);
@@ -18,6 +19,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/publicacion', [PublicacionController::class, 'index']); // Crear publicación
     Route::post('/publicacion/{id}', [PublicacionController::class, 'show']); // Detalle de publicación
     Route::post('/upload', [UploadController::class, 'store']); // Subir archivo
+    Route::get('/usuarios', [UserController::class, 'index']); // Ruta para listar o buscar usuarios
+    Route::get('/usuarios/recent', [UserController::class, 'recent']); // Nueva ruta para usuarios recientes
 });
 
 // Rutas protegidas para administradores

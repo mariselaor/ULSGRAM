@@ -11,13 +11,13 @@ return new class extends Migration
      */
    public function up()
 {
-    Schema::create('publicaciones', function (Blueprint $table) {
-        $table->id();
-        $table->string('url');         // para la ruta de la imagen
-        $table->string('titulo');      // título de la publicación
-        $table->text('descripcion');   // descripción de la publicación
-        $table->timestamps();          // created_at y updated_at
-    });
+   Schema::create('publicaciones', function (Blueprint $table) {
+    $table->id();
+    $table->string('url');
+    $table->string('titulo');
+    $table->text('descripcion');
+    $table->timestamps();
+});
 }
 
 

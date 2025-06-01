@@ -1,4 +1,3 @@
-// SearchUsers.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { httpClient } from "../api/HttpClient";
 import "bootstrap/dist/css/bootstrap.min.css";

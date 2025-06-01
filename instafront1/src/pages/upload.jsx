@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { httpClient } from '../api/HttpClient'; 
 
 export default function CrearPublicacion() {
   const [form, setForm] = useState({
@@ -34,8 +34,7 @@ export default function CrearPublicacion() {
     formData.append("descripcion", form.descripcion);
 
     try {
-      // eslint-disable-next-line no-unused-vars
-      const response = await axios.post("http://localhost:8000/api/publicaciones", formData, {
+      const response = await httpClient.post("http://localhost:8000/api/publicaciones", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -48,7 +47,6 @@ export default function CrearPublicacion() {
       if (err.response?.status === 422) {
         const errors = err.response.data.errors;
         if (errors) {
-          // Convierte los arrays de mensajes a un solo string
           const messages = Object.values(errors).map(msg =>
             Array.isArray(msg) ? msg.join(" ") : msg
           );

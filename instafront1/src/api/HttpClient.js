@@ -1,19 +1,14 @@
-import axios from "axios";
+import axios from 'axios';
 
-const httpClient = axios.create({
-  baseURL: "http://localhost:8000/api",
+export const httpClient = axios.create({
+  baseURL: 'http://localhost:8000/api',
 });
 
-// Interceptor para agregar token a cada request
-httpClient.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => Promise.reject(error)
-);
-
-export { httpClient };
+// Agrega interceptor para enviar token en cada petición
+httpClient.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Comentario;
@@ -9,26 +10,54 @@ class ComentarioController extends Controller
 {
     public function index($publicacionId)
     {
-        $comentarios = Comentario::where('publicacion_id', $publicacionId)
-            ->with('user:id,name') // si quieres info del usuario
-            ->orderBy('created_at', 'desc')
-            ->get();
+        try {
+            $comentarios = Comentario::where('publicacion_id', $publicacionId)
+                ->with('user:id,name') // Solo cargar campos existentes
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        return response()->json($comentarios);
+            return response()->json([
+                'success' => true,
+                'data' => $comentarios
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Error al obtener comentarios',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function store(Request $request, $publicacionId)
     {
-        $request->validate([
-            'contenido' => 'required|string|max:1000',
-        ]);
+        try {
+            $request->validate([
+                'contenido' => 'required|string|max:1000',
+            ]);
 
-        $comentario = Comentario::create([
-            'user_id' => Auth::id(), // Asegúrate que el usuario esté autenticado
-            'publicacion_id' => $publicacionId,
-            'contenido' => $request->contenido,
-        ]);
+            $comentario = Comentario::create([
+                'user_id' => Auth::id(),
+                'publicacion_id' => $publicacionId,
+                'contenido' => $request->contenido,
+            ]);
 
-        return response()->json($comentario, 201);
+            // Cargar información básica del usuario
+            $comentario->load('user:id,name');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Comentario creado correctamente',
+                'data' => $comentario
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Error al guardar el comentario',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

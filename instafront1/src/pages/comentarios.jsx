@@ -31,19 +31,19 @@ export default function Comentarios({ postId }) {
 
     setLoading(true);
     setError(null);
-    
+
     try {
       await httpClient.post(`/publicaciones/${postId}/comentarios`, {
-        contenido: newComment.trim(),
+        contenido: newComment.trim()
       });
-      
-      // Refrescar la lista de comentarios
+
+      // Actualiza la lista de comentarios después de guardar
       await fetchComments();
       setNewComment("");
     } catch (error) {
       console.error("Error al enviar comentario:", error);
       setError(
-        error.response?.data?.message || 
+        error.response?.data?.message ||
         "Error al enviar comentario. Verifica tu conexión."
       );
     } finally {
@@ -52,7 +52,7 @@ export default function Comentarios({ postId }) {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !loading) {
+    if (e.key === "Enter" && !loading) {
       handleAddComment();
     }
   };
@@ -60,37 +60,37 @@ export default function Comentarios({ postId }) {
   return (
     <div style={{ marginTop: 10 }}>
       <h6>Comentarios ({comments.length})</h6>
-      
+
       {error && <p style={{ color: "red", fontSize: "0.8rem" }}>{error}</p>}
-      
+
       {comments.length === 0 && !error && <p>No hay comentarios aún.</p>}
-      
-      <ul style={{ listStyle: "none", padding: 0, maxHeight: "200px", overflowY: "auto" }}>
+
+      <ul style={{
+          listStyle: "none",
+          padding: 0,
+          maxHeight: "200px",
+          overflowY: "auto",
+        }}>
         {comments.map((c) => (
-          <li key={c.id} style={{ marginBottom: "10px", padding: "5px", borderBottom: "1px solid #eee" }}>
+          <li key={c.id} style={{
+              marginBottom: "10px",
+              padding: "5px",
+              borderBottom: "1px solid #eee",
+            }}>
             <div style={{ display: "flex", alignItems: "center" }}>
-              {c.user?.profile_photo_url && (
-                <img 
-                  src={c.user.profile_photo_url} 
-                  alt={c.user.name}
-                  style={{ 
-                    width: "30px", 
-                    height: "30px", 
-                    borderRadius: "50%", 
-                    marginRight: "10px",
-                    objectFit: "cover"
-                  }}
-                />
-              )}
               <div>
-                <strong style={{ fontSize: "0.9rem" }}>{c.user?.name ?? "Anónimo"}:</strong>
-                <p style={{ margin: "5px 0", fontSize: "0.9rem" }}>{c.contenido}</p>
+                <strong style={{ fontSize: "0.9rem" }}>
+                  {c.user?.name ?? "Anónimo"}:
+                </strong>
+                <p style={{ margin: "5px 0", fontSize: "0.9rem" }}>
+                  {c.contenido}
+                </p>
               </div>
             </div>
           </li>
         ))}
       </ul>
-      
+
       <div style={{ display: "flex", marginTop: "10px" }}>
         <input
           type="text"
@@ -99,12 +99,12 @@ export default function Comentarios({ postId }) {
           onKeyPress={handleKeyPress}
           placeholder="Escribe un comentario..."
           disabled={loading}
-          style={{ 
-            flex: 1, 
-            padding: "8px", 
-            border: "1px solid #ccc", 
+          style={{
+            flex: 1,
+            padding: "8px",
+            border: "1px solid #ccc",
             borderRadius: "4px 0 0 4px",
-            fontSize: "0.9rem"
+            fontSize: "0.9rem",
           }}
         />
         <button
@@ -117,7 +117,7 @@ export default function Comentarios({ postId }) {
             border: "none",
             borderRadius: "0 4px 4px 0",
             cursor: loading ? "not-allowed" : "pointer",
-            fontSize: "0.9rem"
+            fontSize: "0.9rem",
           }}
         >
           {loading ? "Enviando..." : "Publicar"}

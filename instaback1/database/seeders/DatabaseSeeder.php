@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
             productosSeeder::class,
             pedidosSeeder::class,
             pagosSeeder::class,
-            detallespedidoSeeder::class
+            detallespedidoSeeder::class,
+            RoleSeeder::class,
         ]);
     }
 }

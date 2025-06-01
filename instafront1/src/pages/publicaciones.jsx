@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { httpClient } from '../api/HttpClient';
-import Comentarios from './comentarios';  // Asegúrate que la ruta sea correcta
+import Comentarios from './comentarios';
 
 function Publicaciones() {
   const [publicaciones, setPublicaciones] = useState([]);
   const [comentariosVisibles, setComentariosVisibles] = useState({});
   const [error, setError] = useState(null);
+  const [loadingLikes, setLoadingLikes] = useState({}); // Estado para botones de like
 
   useEffect(() => {
     cargarPublicaciones();
@@ -22,12 +23,30 @@ function Publicaciones() {
     }
   };
 
-  const darLike = async (id) => {
+  const toggleLike = async (publicacionId) => {
+    setLoadingLikes(prev => ({ ...prev, [publicacionId]: true }));
+    
     try {
-      await httpClient.post(`/publicaciones/${id}/like`);
-      cargarPublicaciones();
+      const response = await httpClient.post(`/publicaciones/${publicacionId}/like`);
+      
+      // Actualizar el estado local
+      setPublicaciones(prev => prev.map(pub => {
+        if (pub.id === publicacionId) {
+          return {
+            ...pub,
+            likes_count: response.data.likes_count,
+            // Si necesitas manejar el estado de like del usuario actual:
+            is_liked: response.data.action === 'added'
+          };
+        }
+        return pub;
+      }));
+      
     } catch (err) {
+      console.error("Error al dar like:", err);
       alert(err.response?.data?.message || "Error al dar like");
+    } finally {
+      setLoadingLikes(prev => ({ ...prev, [publicacionId]: false }));
     }
   };
 
@@ -55,8 +74,23 @@ function Publicaciones() {
               onClick={() => toggleComentarios(pub.id)}
             />
           )}
-          <p>Likes: {pub.likes?.length || 0}</p>
-          <button onClick={() => darLike(pub.id)}>Like</button>
+          <div style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
+            <button 
+              onClick={() => toggleLike(pub.id)}
+              disabled={loadingLikes[pub.id]}
+              style={{
+                marginRight: 10,
+                background: pub.is_liked ? '#0095f6' : '#f0f0f0',
+                color: pub.is_liked ? 'white' : 'black',
+                border: 'none',
+                padding: '5px 10px',
+                borderRadius: 5,
+                cursor: 'pointer'
+              }}
+            >
+              {loadingLikes[pub.id] ? '...' : '👍 Like'} ({pub.likes_count || 0})
+            </button>
+          </div>
 
           {comentariosVisibles[pub.id] && <Comentarios postId={pub.id} />}
         </div>

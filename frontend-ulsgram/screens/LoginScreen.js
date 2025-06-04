@@ -9,15 +9,17 @@ export default function LoginScreen() {
         email: 'tucorreo@ejemplo.com',
         password: '12345678',
       });
-      Alert.alert('Token', response.data.token);
+
+      Alert.alert('Token', response.data.access_token);
     } catch (error) {
-      Alert.alert('Error', 'Credenciales incorrectas');
+      console.error(error.response?.data || error.message);
+      Alert.alert('Error', 'Credenciales incorrectas o fallo de red');
     }
   };
 
   return (
-    <View>
-      <Text>Login</Text>
+    <View style={{ padding: 20 }}>
+      <Text style={{ fontSize: 20, marginBottom: 10 }}>Login</Text>
       <Button title="Iniciar sesión" onPress={handleLogin} />
     </View>
   );

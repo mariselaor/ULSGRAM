@@ -1,9 +1,13 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/', function () {
-    return 'Funciona';
+Route::get('/login', function () {
+    return response()->json([
+        'message' => 'Usa el método POST para iniciar sesión.'
+    ]);
+});
+
+Route::get('/test', function () {
+    return response()->json(['message' => 'Frontend conectado']);
 });
